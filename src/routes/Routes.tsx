@@ -1,21 +1,32 @@
-// const Dashboard = lazy(() => import("@pages/Dashboard/Dashboard"));
-// const Settings = lazy(() => import("@pages/Settings/Settings"));
+import { Suspense } from "react";
+import { ErrorBoundary } from "../utils/ErrorBoundary";
+import { useRoutes } from "react-router-dom";
+import Login from "@/pages/auth/Login";
+import ProtectedRoute from "./ProtectedRoute";
+const lazyLoad = (Component: React.ComponentType) => {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={null}>
+        <Component />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
 
-// const ImportsLayout = lazy(() => import("@pages/Imports/Layout"));
-// const AlarmsLayout = lazy(() => import("@pages/Alarms/Layout"));
-
-// const Login = lazy(() => import("@pages/Login"));
-// const Verify = lazy(() => import("@pages/Verify"));
-
-// const lazyLoad = (Component: React.ComponentType) => {
-//   return (
-//     <ErrorBoundary>
-//       <Suspense fallback={null}>
-//         <Component />
-//       </Suspense>
-//     </ErrorBoundary>
-//   );
-// };
+const routeConfig = [
+  {
+    path: "/login",
+    element: lazyLoad(Login),
+  },
+  {
+    element : <ProtectedRoute />,
+    children : [
+      {
+        path: "/home"
+      }
+    ]
+  }
+];
 
 // const routeConfig = [
 //   {
@@ -159,9 +170,9 @@
 //   },
 // ];
 
-// const Routes = () => {
-//   const routes = useRoutes(routeConfig);
-//   return routes;
-// };
+const Routes = () => {
+  const routes = useRoutes(routeConfig);
+  return routes;
+};
 
-// export default Routes;
+export default Routes;
